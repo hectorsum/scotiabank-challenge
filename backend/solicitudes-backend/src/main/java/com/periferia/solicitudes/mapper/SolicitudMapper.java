@@ -2,6 +2,7 @@ package com.periferia.solicitudes.mapper;
 
 import com.periferia.solicitudes.dto.SolicitudCreateDTO;
 import com.periferia.solicitudes.dto.SolicitudDTO;
+import com.periferia.solicitudes.dto.SolicitudPriorityUpdateDTO;
 import com.periferia.solicitudes.dto.SolicitudUpdateDTO;
 import com.periferia.solicitudes.entity.Solicitud;
 import com.periferia.solicitudes.entity.enums.Category;
@@ -43,5 +44,9 @@ public class SolicitudMapper {
         entity.setCategory(Category.fromLabel(dto.getCategory()));
         entity.setPriority(Priority.fromLabel(dto.getPriority()));
         entity.setStatus(Status.fromLabel(dto.getStatus()));
+    }
+
+    public void updatePriority(SolicitudPriorityUpdateDTO dto, Solicitud entity) {
+        entity.setPriority(Priority.fromLabel(dto.getPriority()));
     }
 }
