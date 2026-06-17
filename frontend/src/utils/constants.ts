@@ -1,11 +1,11 @@
 export const PRIORITIES = ['baja', 'media', 'alta', 'crítica'] as const;
 export const STATUSES = ['pendiente', 'en revisión', 'aprobada', 'rechazada', 'cerrada'] as const;
 export const CATEGORIES = [
-  'infraestructura',
-  'recursos_humanos',
-  'financiero',
-  'administrativo',
-  'tecnología',
+  'Infraestructura',
+  'Software',
+  'Hardware',
+  'Redes',
+  'Soporte Técnico',
 ] as const;
 
 export const PRIORITY_COLORS: Record<string, string> = {

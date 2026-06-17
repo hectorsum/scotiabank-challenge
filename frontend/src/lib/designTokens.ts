@@ -26,12 +26,11 @@ export const PRIORITY_ORDER: Priority[] = ['baja', 'media', 'alta', 'crítica'];
 export const ACCENT = '#C8965A';
 
 export const FORM_CATEGORIES = [
-  'Soporte técnico',
-  'Recursos humanos',
   'Infraestructura',
-  'Compras',
-  'Accesos',
-  'Mantenimiento',
+  'Software',
+  'Hardware',
+  'Redes',
+  'Soporte Técnico',
 ] as const;
 
 export type FormCategory = (typeof FORM_CATEGORIES)[number];

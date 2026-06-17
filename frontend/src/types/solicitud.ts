@@ -1,6 +1,6 @@
 export type Priority = 'baja' | 'media' | 'alta' | 'crítica';
 export type Status = 'pendiente' | 'en revisión' | 'aprobada' | 'rechazada' | 'cerrada';
-export type Category = 'infraestructura' | 'recursos_humanos' | 'financiero' | 'administrativo' | 'tecnología';
+export type Category = 'Infraestructura' | 'Software' | 'Hardware' | 'Redes' | 'Soporte Técnico';
 
 export interface Solicitud {
   id: number;
