@@ -10,35 +10,17 @@ export function PrioridadBadge({ priority }: PrioridadBadgeProps) {
   const bars = getPriorityBars(priority);
 
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '7px' }}>
-      <span
-        style={{
-          display: 'inline-flex',
-          alignItems: 'flex-end',
-          gap: '2px',
-          height: '14px',
-        }}
-      >
+    <span className="inline-flex items-center gap-[7px]">
+      <span className="inline-flex items-end gap-[2px] h-[14px]">
         {bars.map((bar, i) => (
           <span
             key={i}
-            style={{
-              width: '3px',
-              borderRadius: '1px',
-              height: bar.h,
-              background: bar.bg,
-            }}
+            className="w-[3px] rounded-[1px]"
+            style={{ height: bar.h, background: bar.bg }}
           />
         ))}
       </span>
-      <span
-        style={{
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: '12.5px',
-          fontWeight: 500,
-          color: cfg.color,
-        }}
-      >
+      <span className="font-sans text-[12.5px] font-medium" style={{ color: cfg.color }}>
         {cfg.label}
       </span>
     </span>

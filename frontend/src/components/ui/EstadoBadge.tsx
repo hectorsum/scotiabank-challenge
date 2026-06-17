@@ -8,35 +8,14 @@ interface EstadoBadgeProps {
 
 export function EstadoBadge({ status, size = 'md' }: EstadoBadgeProps) {
   const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG['pendiente'];
-  const dotPx = size === 'sm' ? '6px' : '7px';
-  const padding = size === 'sm' ? '4px 10px' : '4px 11px';
-  const fontSize = size === 'sm' ? '12px' : '12.5px';
+  const wrapClass = size === 'sm'
+    ? 'inline-flex items-center gap-[6px] px-[10px] py-1 rounded-full font-sans text-[12px] font-medium shrink-0'
+    : 'inline-flex items-center gap-[6px] px-[11px] py-1 rounded-full font-sans text-[12.5px] font-medium shrink-0';
+  const dotClass = size === 'sm' ? 'w-[6px] h-[6px] rounded-full shrink-0' : 'w-[7px] h-[7px] rounded-full shrink-0';
 
   return (
-    <span
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '6px',
-        padding,
-        borderRadius: '9999px',
-        fontFamily: "'Outfit', sans-serif",
-        fontSize,
-        fontWeight: 500,
-        background: cfg.bg,
-        color: cfg.color,
-        flexShrink: 0,
-      }}
-    >
-      <span
-        style={{
-          width: dotPx,
-          height: dotPx,
-          borderRadius: '9999px',
-          background: cfg.dot,
-          flexShrink: 0,
-        }}
-      />
+    <span className={wrapClass} style={{ background: cfg.bg, color: cfg.color }}>
+      <span className={dotClass} style={{ background: cfg.dot }} />
       {cfg.label}
     </span>
   );

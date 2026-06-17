@@ -19,34 +19,15 @@ export function Toast({ message, type = 'success', onDismiss, duration = 2800 }:
 
   return (
     <div
+      className="fixed bottom-6 right-6 z-[90] flex items-center gap-3 px-[18px] py-[14px] rounded-lg bg-fg-primary max-w-[360px]"
       style={{
-        position: 'fixed',
-        bottom: '24px',
-        right: '24px',
-        zIndex: 90,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '14px 18px',
-        borderRadius: '10px',
-        background: '#161310',
         boxShadow: '0 12px 40px rgba(20,17,13,0.28)',
         animation: 'gsToast 0.4s cubic-bezier(0.16,1,0.3,1) both',
-        maxWidth: '360px',
       }}
     >
       <span
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '24px',
-          height: '24px',
-          borderRadius: '9999px',
-          background: iconBg,
-          color: '#FFFFFF',
-          flexShrink: 0,
-        }}
+        className="inline-flex items-center justify-center w-6 h-6 rounded-full text-white shrink-0"
+        style={{ background: iconBg }}
       >
         {type === 'error' ? (
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
@@ -58,13 +39,7 @@ export function Toast({ message, type = 'success', onDismiss, duration = 2800 }:
           </svg>
         )}
       </span>
-      <span
-        style={{
-          fontFamily: "'Outfit', sans-serif",
-          fontSize: '14px',
-          color: '#F4F1EA',
-        }}
-      >
+      <span className="font-sans text-[14px] text-bg-page">
         {message}
       </span>
     </div>
