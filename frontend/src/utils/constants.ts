@@ -9,18 +9,18 @@ export const CATEGORIES = [
 ] as const;
 
 export const PRIORITY_COLORS: Record<string, string> = {
-  baja: '#3b82f6',
-  media: '#f59e0b',
-  alta: '#ef4444',
-  crítica: '#7c3aed',
+  baja: '#8C857A',
+  media: '#B98A3A',
+  alta: '#C8965A',
+  crítica: '#C84B4B',
 };
 
 export const STATUS_COLORS: Record<string, string> = {
-  pendiente: '#fbbf24',
-  'en revisión': '#60a5fa',
-  aprobada: '#10b981',
-  rechazada: '#ef4444',
-  cerrada: '#6b7280',
+  pendiente: '#6E675B',
+  'en revisión': '#97601C',
+  aprobada: '#2E7B4E',
+  rechazada: '#B23A3A',
+  cerrada: '#57534A',
 };
 
 export const ITEMS_PER_PAGE = 10;

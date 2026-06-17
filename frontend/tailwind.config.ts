@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         status: {
-          pendiente: '#fbbf24',
-          'en-revision': '#60a5fa',
-          aprobada: '#10b981',
-          rechazada: '#ef4444',
-          cerrada: '#6b7280',
+          pendiente: '#6E675B',
+          'en-revision': '#97601C',
+          aprobada: '#2E7B4E',
+          rechazada: '#B23A3A',
+          cerrada: '#57534A',
         },
         priority: {
-          baja: '#3b82f6',
-          media: '#f59e0b',
-          alta: '#ef4444',
-          critica: '#7c3aed',
+          baja: '#8C857A',
+          media: '#B98A3A',
+          alta: '#C8965A',
+          critica: '#C84B4B',
         },
       },
       spacing: {
