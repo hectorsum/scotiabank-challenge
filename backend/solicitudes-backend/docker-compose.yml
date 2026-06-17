@@ -1,0 +1,43 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: solicitudes-api
+    ports:
+      - "8080:8080"
+    environment:
+      # Opcional SPRING_*, sobreescribimos el application.yml
+      SPRING_APPLICATION_NAME: solicitudes-api
+      SPRING_PROFILES_ACTIVE: docker
+      # DB H2 en memoria
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:solicitudesdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_DATASOURCE_DRIVERCLASSNAME: org.h2.Driver
+      SPRING_DATASOURCE_USERNAME: hectorsum
+      SPRING_DATASOURCE_PASSWORD: ""
+      # JPA / Hibernate
+      SPRING_JPA_HIBERNATE_DDL_AUTO: create-drop
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.H2Dialect
+      SPRING_JPA_SHOW_SQL: "false"
+      # Consola H2 (dev)
+      SPRING_H2_CONSOLE_ENABLED: "true"
+      SPRING_H2_CONSOLE_PATH: /h2-console
+      # Logging
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_LEVEL_COM_PERIFERIA: DEBUG
+
+    # Asignamos un nombre a nuestra red (opcional)
+    networks:
+      - solicitudes-network
+    # Opcional, el container se reinicia solo
+    restart: unless-stopped
+
+    # Opcional, por defecto usamos json-file
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+networks:
+  solicitudes-network:
+    driver: bridge
