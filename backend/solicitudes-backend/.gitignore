@@ -1,29 +1,60 @@
 # Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.jar
+*.war
+*.ear
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
 
-# IDE
+# IDE — IntelliJ IDEA
 .idea/
 *.iml
 *.ipr
 *.iws
-.vscode/
+out/
+
+# Java
 *.class
+*.log
+hs_err_pid*
+
+# Docker
+.dockerignore
+docker-compose.override.yml
 
 # Environment
 .env
-*.env.local
+.env.local
 .env.development
+.env.production
+
+# Database
+*.h2.db
+*.mv.db
+*.trace.db
+
+# Logs
+logs/
+*.log
+spring-shell.log
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Logs
-*.log
-logs/
-
-# Spring Boot
-spring-shell.log
+# Temporales
+tmp/
+temp/
+*.tmp
+*.swp
+*.bak
