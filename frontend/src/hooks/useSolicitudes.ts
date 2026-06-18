@@ -25,7 +25,7 @@ export function useSolicitudes({
   // Debounce search — status/priority apply immediately
   const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(filters.search), 500);
+    const t = setTimeout(() => setDebouncedSearch(filters.search), 150);
     return () => clearTimeout(t);
   }, [filters.search]);
 

@@ -15,9 +15,7 @@ export function Header({
   pageTitle,
   crumb,
   onToggleSidebar,
-  onReload,
   onNewRequest,
-  isLoading = false,
 }: HeaderProps) {
   return (
     <header
@@ -46,23 +44,6 @@ export function Header({
 
       {/* Actions */}
       <div className="ml-auto flex items-center gap-[10px]">
-        <button
-          className="gs-pbtn inline-flex items-center justify-center w-10 h-10 border border-[rgba(20,17,13,0.12)] rounded-sm bg-bg-surface cursor-pointer text-fg-secondary"
-          onClick={onReload}
-          title="Recargar"
-        >
-          <svg
-            width="17" height="17" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"
-            className={isLoading ? 'gs-spin' : ''}
-          >
-            <path d="M3 12a9 9 0 0 1 9-9 9 9 0 0 1 6.36 2.64L21 8" />
-            <path d="M21 3v5h-5" />
-            <path d="M21 12a9 9 0 0 1-9 9 9 9 0 0 1-6.36-2.64L3 16" />
-            <path d="M3 21v-5h5" />
-          </svg>
-        </button>
-
         <button
           className="gs-pbtn inline-flex items-center gap-2 px-[18px] h-10 border-none rounded-sm text-white font-sans text-[13.5px] font-semibold cursor-pointer shadow-xs"
           style={{ background: ACCENT }}

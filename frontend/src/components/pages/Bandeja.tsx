@@ -52,8 +52,8 @@ export function Bandeja({
     <div className="gs-enter max-w-[1180px]">
 
       {/* Toolbar */}
-      <div className="grid grid-cols-4 gap-3 items-center mb-[18px]">
-        <div className="col-span-2 relative">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-center mb-[18px]">
+        <div className="md:col-span-2 relative">
           <span className="absolute left-[14px] top-1/2 -translate-y-1/2 text-fg-faint inline-flex">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
@@ -118,9 +118,9 @@ export function Bandeja({
 
       {/* Table */}
       <div className="bg-bg-surface border border-[rgba(20,17,13,0.09)] rounded-xl overflow-hidden">
-        {/* Header row */}
+        {/* Header row — desktop only */}
         <div
-          className="gs-head-row grid gap-4 px-[22px] py-[13px] border-b border-[rgba(20,17,13,0.08)] bg-bg-hover"
+          className="hidden md:grid gap-4 px-[22px] py-[13px] border-b border-[rgba(20,17,13,0.08)] bg-bg-hover"
           style={{ gridTemplateColumns: '90px 1fr 150px 140px 120px 130px 90px' }}
         >
           {['ID', 'Solicitud', 'Solicitante', 'Categoría', 'Prioridad', 'Estado', 'Actualizada'].map((h) => (
@@ -137,24 +137,39 @@ export function Bandeja({
         {solicitudes.map((row) => (
           <button
             key={row.id}
-            className="gs-row-hover gs-row grid gap-4 items-center w-full text-left border-none border-b border-[rgba(20,17,13,0.06)] bg-bg-surface cursor-pointer px-[22px] py-[15px]"
-            style={{ gridTemplateColumns: '90px 1fr 150px 140px 120px 130px 90px' }}
+            className="gs-row-hover w-full text-left border-none border-b border-[rgba(20,17,13,0.06)] bg-bg-surface cursor-pointer"
             onClick={() => onRowClick(row.id)}
           >
-            <span className="font-mono text-[12px] text-fg-faint">{formatSolicitudId(row.id)}</span>
-            <span className="flex flex-col gap-[3px] min-w-0">
-              <span className="font-sans text-[14.5px] font-medium text-fg-primary whitespace-nowrap overflow-hidden text-ellipsis">
-                {row.title}
-              </span>
-              <span className="gs-cell-label hidden font-mono text-[11px] text-fg-faint">
+            {/* Mobile card */}
+            <div className="md:hidden px-5 py-4 flex flex-col gap-[5px]">
+              <span className="font-mono text-[11px] text-fg-faint">{formatSolicitudId(row.id)}</span>
+              <span className="font-sans text-[15px] font-medium text-fg-primary">{row.title}</span>
+              <span className="font-mono text-[11.5px] text-fg-faint">
                 {row.requester} · {row.category} · {formatShort(row.lastChangeDate)}
               </span>
-            </span>
-            <span className="font-sans text-[13.5px] text-fg-secondary whitespace-nowrap overflow-hidden text-ellipsis">{row.requester}</span>
-            <span className="font-sans text-[13px] text-fg-secondary whitespace-nowrap overflow-hidden text-ellipsis">{row.category}</span>
-            <PrioridadBadge priority={row.priority} />
-            <EstadoBadge status={row.status} size="sm" />
-            <span className="font-mono text-[11.5px] text-fg-faint text-right">{formatShort(row.lastChangeDate)}</span>
+              <div className="flex items-center gap-2 mt-[3px]">
+                <PrioridadBadge priority={row.priority} />
+                <EstadoBadge status={row.status} size="sm" />
+              </div>
+            </div>
+
+            {/* Desktop row */}
+            <div
+              className="hidden md:grid gap-4 items-center px-[22px] py-[15px]"
+              style={{ gridTemplateColumns: '90px 1fr 150px 140px 120px 130px 90px' }}
+            >
+              <span className="font-mono text-[12px] text-fg-faint">{formatSolicitudId(row.id)}</span>
+              <span className="flex flex-col gap-[3px] min-w-0">
+                <span className="font-sans text-[14.5px] font-medium text-fg-primary whitespace-nowrap overflow-hidden text-ellipsis">
+                  {row.title}
+                </span>
+              </span>
+              <span className="font-sans text-[13.5px] text-fg-secondary whitespace-nowrap overflow-hidden text-ellipsis">{row.requester}</span>
+              <span className="font-sans text-[13px] text-fg-secondary whitespace-nowrap overflow-hidden text-ellipsis">{row.category}</span>
+              <PrioridadBadge priority={row.priority} />
+              <EstadoBadge status={row.status} size="sm" />
+              <span className="font-mono text-[11.5px] text-fg-faint text-right">{formatShort(row.lastChangeDate)}</span>
+            </div>
           </button>
         ))}
 
