@@ -228,10 +228,10 @@ Imagen final: ~180MB  (vs ~900MB con single stage + node_modules completo)
 
 ### Backend
 
-| Entorno | URL |
-|---|---|
-| Local | `http://localhost:8080` |
-| AWS ECS | `http://3.15.154.47:8080` |
+| Entorno | URL                                                      |
+| ---------| ----------------------------------------------------------|
+| Local   | `http://localhost:8080`                                  |
+| Railway | `https://scotiabank-challenge-production.up.railway.app` |
 
 ### Endpoints consumidos
 
@@ -378,11 +378,11 @@ Next.js 14 requiere declarar `'use client'` explícitamente. `layout.tsx` perman
 
 ### Entornos
 
-| Entorno               | Frontend                                   | Backend URL                                   |
-| -----------------------| --------------------------------------------| -----------------------------------------------|
-| Local (`npm run dev`) | `localhost:3000`                           | `localhost:8080` (`.env.local`)               |
-| Docker local          | `localhost:3000`                           | `host.docker.internal:8080` (default)         |
-| Vercel (producción)   | `https://scotiabank-challenge.vercel.app/` | `http://3.15.154.47:8080` (env var en Vercel) |
+| Entorno                       | Frontend                                   | Backend URL                                                                  |
+| -------------------------------| --------------------------------------------| ------------------------------------------------------------------------------|
+| Local (`npm run dev`)         | `localhost:3000`                           | `localhost:8080` (`.env.local`)                                              |
+| Docker local                  | `localhost:3000`                           | `host.docker.internal:8080` (default)                                        |
+| Vercel / Railway (producción) | `https://scotiabank-challenge.vercel.app/` | `https://scotiabank-challenge-production.up.railway.app` (env var en Vercel) |
 
 ### Deploy en Vercel
 
@@ -391,7 +391,7 @@ Vercel es el entorno de producción. La URL del backend de AWS se configura como
 1. Conectar el repositorio en [vercel.com](https://vercel.com)
 2. En **Settings → Environment Variables**, agregar:
    ```
-   NEXT_PUBLIC_API_URL = http://3.15.154.47:8080
+   NEXT_PUBLIC_API_URL = https://scotiabank-challenge-production.up.railway.app
    ```
 3. Hacer deploy — Vercel inyecta la variable en el build automáticamente
 
@@ -403,7 +403,7 @@ Si se necesita deploy en otro entorno (ECS, GCP, etc.):
 
 ```bash
 docker build \
-  --build-arg NEXT_PUBLIC_API_URL=http://3.15.154.47:8080 \
+  --build-arg NEXT_PUBLIC_API_URL=https://scotiabank-challenge-production.up.railway.app \
   -t solicitudes-frontend:latest \
   ./frontend
 ```
