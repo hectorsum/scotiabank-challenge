@@ -2,11 +2,14 @@
 
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Bandeja } from '@/components/pages/Bandeja';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useSolicitudes } from '@/hooks';
+import { useSolicitudStore } from '@/store';
+import { solicitudService } from '@/services/solicitudService';
 import type { Status, Priority } from '@/types';
 
 type Page = 'dashboard' | 'bandeja' | 'crear' | 'detalle';
@@ -30,6 +33,7 @@ const PRIORITY_RANK: Record<Priority, number> = {
 function BandejaContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { pagination } = useSolicitudStore();
 
   const initialStatus = (searchParams.get('status') as Status | null) ?? 'todos';
 
@@ -40,22 +44,34 @@ function BandejaContent() {
     sortBy: 'recientes',
   });
 
-  const apiFilters = {
-    status: filters.status !== 'todos' ? filters.status : undefined,
+  const sharedFilters = {
     priority: filters.priority !== 'todos' ? filters.priority : undefined,
     search: filters.search || undefined,
   };
 
-  const { solicitudes, loading, error, totalElements, refetch } = useSolicitudes({
-    page: 0,
-    size: 50,
-    filters: apiFilters,
+  // Query para los conteos de solicitudes - sin filtro de status para ver todos los estados
+  const { data: countData } = useQuery({
+    queryKey: ['solicitudes-counts', sharedFilters],
+    queryFn: () => solicitudService.getSolicitudes({ page: 0, size: 200, ...sharedFilters }),
+    staleTime: 30 * 1000,
   });
 
   const counts = ALL_STATUSES.reduce((acc, s) => {
-    acc[s] = solicitudes.filter((x) => x.status === s).length;
+    acc[s] = (countData?.content ?? []).filter((x) => x.status === s).length;
     return acc;
   }, {} as Record<Status, number>);
+
+  const grandTotal = countData?.totalElements ?? pagination.totalElements;
+
+  // Query principal con todos los filtros incluyendo status
+  const { solicitudes, loading, error, refetch } = useSolicitudes({
+    page: 0,
+    size: 50,
+    filters: {
+      ...sharedFilters,
+      status: filters.status !== 'todos' ? filters.status : undefined,
+    },
+  });
 
   const sorted = [...solicitudes].sort((a, b) => {
     switch (filters.sortBy) {
@@ -78,7 +94,7 @@ function BandejaContent() {
   return (
     <AppLayout
       currentPage="bandeja"
-      totalRequests={totalElements}
+      totalRequests={grandTotal}
       isLoading={loading}
       onNavigate={handleNavigate}
       onReload={() => { void refetch(); }}
@@ -94,7 +110,7 @@ function BandejaContent() {
           solicitudes={sorted}
           filters={filters}
           counts={counts}
-          total={totalElements}
+          total={grandTotal}
           onFilterChange={(partial) =>
             setFilters((prev) => ({ ...prev, ...partial }))
           }

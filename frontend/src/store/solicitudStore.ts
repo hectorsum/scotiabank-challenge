@@ -26,6 +26,7 @@ export interface SolicitudStore {
   setError: (error: string | null) => void;
   setFilters: (filters: Partial<SolicitudFilters>) => void;
   setPage: (page: number) => void;
+  setTotalElements: (total: number) => void;
   clearError: () => void;
   resetFilters: () => void;
   addSolicitud: (solicitud: Solicitud) => void;
@@ -62,6 +63,11 @@ export const useSolicitudStore = create<SolicitudStore>((set) => ({
   setPage: (page) =>
     set((state) => ({
       pagination: { ...state.pagination, page },
+    })),
+
+  setTotalElements: (totalElements) =>
+    set((state) => ({
+      pagination: { ...state.pagination, totalElements },
     })),
 
   clearError: () => set({ error: null }),

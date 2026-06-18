@@ -20,7 +20,7 @@ export function useSolicitudes({
   size = 10,
   filters = {},
 }: UseSolicitudesOptions = {}) {
-  const { setSolicitudes, setLoading, setError, clearError } = useSolicitudStore();
+  const { setSolicitudes, setLoading, setError, clearError, setTotalElements } = useSolicitudStore();
 
   // Debounce search — status/priority apply immediately
   const [debouncedSearch, setDebouncedSearch] = useState(filters.search);
@@ -50,8 +50,12 @@ export function useSolicitudes({
     if (query.data) {
       setSolicitudes(query.data.content);
       clearError();
+      // Only update the total if we don't manipulate any status filter
+      if (!effectiveFilters.status) {
+        setTotalElements(query.data.totalElements);
+      }
     }
-  }, [query.data, setSolicitudes, clearError]);
+  }, [query.data, setSolicitudes, clearError, setTotalElements, effectiveFilters.status]);
 
   useEffect(() => {
     setLoading(query.isLoading);

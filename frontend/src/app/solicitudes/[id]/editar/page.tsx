@@ -6,6 +6,7 @@ import { Form } from '@/components/pages/Form';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { useSolicitud, useUpdateSolicitud } from '@/hooks';
+import { useSolicitudStore } from '@/store';
 import type { Category, Priority, Status } from '@/types';
 
 type Page = 'dashboard' | 'bandeja' | 'crear' | 'detalle';
@@ -26,6 +27,7 @@ export default function EditarPage() {
 
   const { solicitud, loading, error, refetch } = useSolicitud(id);
   const { update, loading: saving } = useUpdateSolicitud(id);
+  const { pagination } = useSolicitudStore();
 
   const handleNavigate = (page: Page) => {
     if (page === 'dashboard') router.push('/');
@@ -48,6 +50,7 @@ export default function EditarPage() {
   return (
     <AppLayout
       currentPage="crear"
+      totalRequests={pagination.totalElements}
       isLoading={loading || saving}
       onNavigate={handleNavigate}
       onReload={() => { void refetch(); }}

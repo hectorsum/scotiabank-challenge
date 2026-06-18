@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Form } from '@/components/pages/Form';
 import { useCreateSolicitud } from '@/hooks';
+import { useSolicitudStore } from '@/store';
 import type { Category, Priority, Status } from '@/types';
 
 type Page = 'dashboard' | 'bandeja' | 'crear' | 'detalle';
@@ -20,6 +21,7 @@ interface FormValues {
 export default function NuevaPage() {
   const router = useRouter();
   const { create, loading } = useCreateSolicitud();
+  const { pagination } = useSolicitudStore();
 
   const handleNavigate = (page: Page) => {
     if (page === 'dashboard') router.push('/');
@@ -40,6 +42,7 @@ export default function NuevaPage() {
   return (
     <AppLayout
       currentPage="crear"
+      totalRequests={pagination.totalElements}
       isLoading={loading}
       onNavigate={handleNavigate}
       onReload={() => {}}
