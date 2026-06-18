@@ -21,7 +21,7 @@ Diseñado como backend desacoplado listo para conectarse a cualquier frontend (R
 - [11. Docker](#-docker)
 - [12. Decisiones Técnicas](#-decisiones-técnicas)
 - [13. Supuestos](#-supuestos)
-- [14. Despliegue en AWS](#-despliegue-en-aws)
+- [14. Despliegue en Railway](#-despliegue-en-railway)
 
 ---
 
@@ -556,7 +556,6 @@ Imagen final: ~185MB  (vs ~700MB con un stage único)
 ## 13. Supuestos
 
 - **H2 es suficiente** para el ambiente de desarrollo y demo, especialmente es bueno para este challenge. A futuro por temas de escalabilidad podemos swapear a PostgreSQL sin cambiar código.
-- **Sin HTTPS**, responsabilidad del reverse proxy (nginx, AWS ALB) en producción.
 - **Sin autenticación/autorización**: fuera del scope de los requisitos de este challenge.
 - **Sin rate limiting**: se implementaría a nivel de API Gateway en producción para limitar o por temas de ataque DDoS
 - **CORS configurado** para `localhost:3000`, usando capa frontend en React en desarrollo local.
@@ -567,63 +566,38 @@ Imagen final: ~185MB  (vs ~700MB con un stage único)
 
 ---
 
-## 14. Despliegue en AWS
+## 14. Despliegue en Railway
 
-La API está desplegada en **AWS ECS Fargate** usando una imagen Docker almacenada en **Amazon ECR**.
+La API está desplegada en **Railway** con HTTPS automático, usando el Dockerfile del proyecto.
+
+### URL pública
+
+```
+https://scotiabank-challenge-production.up.railway.app
+```
+
+```bash
+# Health check
+curl https://scotiabank-challenge-production.up.railway.app/actuator/health
+
+# Endpoint principal
+curl https://scotiabank-challenge-production.up.railway.app/api/v1/solicitudes
+```
 
 ### Infraestructura
 
 ```
-ECR (imagen Docker)
-  └── ECS Fargate (container corriendo)
-        └── URL pública con IP efímera
+GitHub (push) → Railway (build + deploy automático)
+                  └── HTTPS automático
+                  └── URL estable (no cambia)
 ```
 
-| Componente | Detalle |
+### Variables de entorno en Railway
+
+Configuradas en Railway → tu servicio → pestaña **Variables**:
+
+| Key | Value |
 |---|---|
-| **Región** | us-east-2 (Ohio) |
-| **Cluster** | ECS Fargate |
-| **CPU / RAM** | 0.25 vCPU / 0.5 GB |
-| **Puerto** | 8080 |
-
-### URL pública
-
-> **Nota:** La IP es efímera — cambia cada vez que el task se reinicia. Para obtener la URL actual: ECS → Clusters → Tasks → task RUNNING → Public IP.
-
-```
-http://<public-ip>:8080/api/v1/solicitudes
-http://<public-ip>:8080/actuator/health
-```
-
-### Activar / desactivar el servicio
-
-Para evitar costos innecesarios el servicio se apaga cuando no está en uso.
-
-**Apagar:**
-1. ECS → Clusters → tu cluster → Services → tu service
-2. **Update service** → Desired tasks: **0** → Update
-
-**Encender:**
-1. ECS → Clusters → tu cluster → Services → tu service
-2. **Update service** → Desired tasks: **1** → Update
-3. Esperar ~1 minuto → copiar la nueva Public IP del task RUNNING
-
-### Flujo de deploy
-
-```bash
-# 1. Build para AMD64 (requerido para Fargate)
-docker buildx build --platform linux/amd64 -t solicitudes-backend .
-
-# 2. Tag
-docker tag solicitudes-backend:latest \
-  <account-id>.dkr.ecr.us-east-2.amazonaws.com/solicitudes-backend:latest
-
-# 3. Login ECR
-aws ecr get-login-password --region us-east-2 | docker login --username AWS \
-  --password-stdin <account-id>.dkr.ecr.us-east-2.amazonaws.com
-
-# 4. Push
-docker push <account-id>.dkr.ecr.us-east-2.amazonaws.com/solicitudes-backend:latest
-```
-
-Luego en ECS → Service → **Update service** → **Force new deployment**.
+| `SPRING_H2_CONSOLE_ENABLED` | `false` |
+| `SPRING_JPA_SHOW_SQL` | `false` |
+| `LANG` | `C.UTF-8` |
