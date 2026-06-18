@@ -52,9 +52,8 @@ export function Bandeja({
     <div className="gs-enter max-w-[1180px]">
 
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-3 items-center mb-[18px]">
-        {/* Search */}
-        <div className="relative flex-1 min-w-[220px]">
+      <div className="grid grid-cols-4 gap-3 items-center mb-[18px]">
+        <div className="col-span-2 relative">
           <span className="absolute left-[14px] top-1/2 -translate-y-1/2 text-fg-faint inline-flex">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" />
