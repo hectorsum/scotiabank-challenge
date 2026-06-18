@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ACCENT, PRIORITY_ORDER, STATUS_ORDER, STATUS_CONFIG, PRIORITY_CONFIG, FORM_CATEGORIES } from '@/lib/designTokens';
+import { ACCENT, PRIORITY_ORDER, STATUS_ORDER, STATUS_CONFIG, PRIORITY_CONFIG, FORM_CATEGORIES, getPriorityBars } from '@/lib/designTokens';
 import type { Priority, Status } from '@/types';
 
 interface FormValues {
@@ -185,25 +185,43 @@ export function Form({ mode, initialValues, isSubmitting = false, onSubmit, onCa
             </div>
           </div>
 
-          <div className="gs-grid-2 grid grid-cols-2 gap-[18px]">
-            {/* Priority */}
-            <div>
-              <label className={LABEL_CLASS}>
-                Prioridad <span className="text-error">*</span>
-              </label>
-              <select
-                className={`${fieldClass(false)} cursor-pointer`}
-                value={values.priority}
-                onChange={(e) => set('priority', e.target.value as Priority)}
-              >
-                {PRIORITY_ORDER.map((p) => (
-                  <option key={p} value={p}>{PRIORITY_CONFIG[p].label}</option>
-                ))}
-              </select>
+          {/* Priority — button group */}
+          <div>
+            <label className={LABEL_CLASS}>
+              Prioridad <span className="text-error">*</span>
+            </label>
+            <div className="flex gap-2 flex-wrap">
+              {PRIORITY_ORDER.map((key) => {
+                const cfg = PRIORITY_CONFIG[key];
+                const active = values.priority === key;
+                const bars = getPriorityBars(key);
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => set('priority', key)}
+                    className="inline-flex items-center gap-2 py-[9px] px-4 rounded-md cursor-pointer font-sans text-[13.5px] font-medium"
+                    style={{
+                      border: `1px solid ${active ? ACCENT : 'rgba(20,17,13,0.12)'}`,
+                      background: active ? 'rgba(200,150,90,0.12)' : '#FFFFFF',
+                      color: active ? '#161310' : '#57534A',
+                    }}
+                  >
+                    <span className="inline-flex items-end gap-[2px] h-[13px]">
+                      {bars.map((b, i) => (
+                        <span key={i} className="w-[3px] rounded-[1px]" style={{ height: b.h, background: b.bg }} />
+                      ))}
+                    </span>
+                    {cfg.label}
+                  </button>
+                );
+              })}
             </div>
+          </div>
 
-            {/* Status (edit only) */}
-            {isEdit && (
+          {/* Status (edit only) */}
+          {isEdit && (
+            <div className="gs-grid-2 grid grid-cols-2 gap-[18px]">
               <div>
                 <label className={LABEL_CLASS}>Estado</label>
                 <select
@@ -216,8 +234,8 @@ export function Form({ mode, initialValues, isSubmitting = false, onSubmit, onCa
                   ))}
                 </select>
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         {/* Submit row */}
