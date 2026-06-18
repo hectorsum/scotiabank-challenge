@@ -2,6 +2,10 @@
 
 Challenge de Scotiabank - para la gestión del ciclo de vida de solicitudes internas. Construida con Next.js 14 App Router, TypeScript, TanStack Query y Zustand. Consume la API REST del backend desplegada en AWS ECS (producción).
 
+**Prototipo Figma:** [Figma Link](https://www.figma.com/design/32smyivWPfCLVinbSuitdC/Solicitudes-Prototype?node-id=0-1&p=f&t=fmLIZyk8YBDovmnG-0)
+
+![Figma Screenshot](public/figma-screenshot.png)
+
 ---
 
 ## Tabla de contenidos
