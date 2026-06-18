@@ -1,4 +1,4 @@
-# Stage 1: Build
+# Build
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -8,14 +8,14 @@ RUN npm ci
 
 COPY . .
 
-ARG NEXT_PUBLIC_API_URL=http://3.15.154.47:8080
+ARG NEXT_PUBLIC_API_URL=http://host.docker.internal:8080
 ARG NEXT_PUBLIC_API_TIMEOUT=30000
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_TIMEOUT=$NEXT_PUBLIC_API_TIMEOUT
 
 RUN npm run build
 
-# Stage 2: Runtime
+# Runtime
 FROM node:20-alpine
 
 WORKDIR /app
