@@ -1,34 +1,68 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Dashboard } from '@/components/pages/Dashboard';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { useSolicitudes } from '@/hooks';
 import type { Status } from '@/types';
 
-export default function Home() {
-  const counts: Record<Status, number> = {
-    'pendiente':   0,
-    'en revisión': 0,
-    'aprobada':    0,
-    'rechazada':   0,
-    'cerrada':     0,
+type Page = 'dashboard' | 'bandeja' | 'crear' | 'detalle';
+
+const ALL_STATUSES: Status[] = [
+  'pendiente', 'en revisión', 'aprobada', 'rechazada', 'cerrada',
+];
+
+export default function HomePage() {
+  const router = useRouter();
+
+  const { solicitudes, loading, error, totalElements, refetch } = useSolicitudes({
+    page: 0,
+    size: 20,
+  });
+
+  const counts = ALL_STATUSES.reduce((acc, s) => {
+    acc[s] = solicitudes.filter((x) => x.status === s).length;
+    return acc;
+  }, {} as Record<Status, number>);
+
+  const criticalCount = solicitudes.filter((s) => s.priority === 'crítica').length;
+
+  const handleNavigate = (page: Page) => {
+    if (page === 'bandeja') router.push('/solicitudes');
+    else if (page === 'crear') router.push('/solicitudes/nueva');
   };
 
   return (
     <AppLayout
       currentPage="dashboard"
-      totalRequests={0}
-      onNavigate={(page) => console.log('navigate to', page)}
-      onReload={() => console.log('reload')}
+      totalRequests={totalElements}
+      isLoading={loading}
+      onNavigate={handleNavigate}
+      onReload={() => { void refetch(); }}
     >
-      <Dashboard
-        counts={counts}
-        total={0}
-        criticalCount={0}
-        recentItems={[]}
-        onStatusCardClick={(status) => console.log('filter by', status)}
-        onGoBandeja={() => console.log('go bandeja')}
-        onItemClick={(id) => console.log('open', id)}
-      />
+      {error ? (
+        <ErrorState
+          message={error}
+          endpoint="GET /api/v1/solicitudes"
+          onRetry={() => { void refetch(); }}
+        />
+      ) : loading ? (
+        <LoadingSkeleton />
+      ) : (
+        <Dashboard
+          counts={counts}
+          total={totalElements}
+          criticalCount={criticalCount}
+          recentItems={solicitudes.slice(0, 8)}
+          onStatusCardClick={(status) =>
+            router.push(`/solicitudes?status=${encodeURIComponent(status)}`)
+          }
+          onGoBandeja={() => router.push('/solicitudes')}
+          onItemClick={(id) => router.push(`/solicitudes/${id}`)}
+        />
+      )}
     </AppLayout>
   );
 }
