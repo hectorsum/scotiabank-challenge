@@ -21,7 +21,8 @@ Diseñado como backend desacoplado listo para conectarse a cualquier frontend (R
 - [11. Docker](#-docker)
 - [12. Decisiones Técnicas](#-decisiones-técnicas)
 - [13. Supuestos](#-supuestos)
-- [14. Troubleshooting](#-troubleshooting)
+- [14. Despliegue en AWS](#-despliegue-en-aws)
+- [15. Troubleshooting](#-troubleshooting)
 
 ---
 
@@ -567,7 +568,70 @@ Imagen final: ~185MB  (vs ~700MB con un stage único)
 
 ---
 
-## 14. Troubleshooting
+## 14. Despliegue en AWS
+
+La API está desplegada en **AWS ECS Fargate** usando una imagen Docker almacenada en **Amazon ECR**.
+
+### Infraestructura
+
+```
+ECR (imagen Docker)
+  └── ECS Fargate (container corriendo)
+        └── URL pública con IP efímera
+```
+
+| Componente | Detalle |
+|---|---|
+| **Región** | us-east-2 (Ohio) |
+| **Cluster** | ECS Fargate |
+| **CPU / RAM** | 0.25 vCPU / 0.5 GB |
+| **Puerto** | 8080 |
+
+### URL pública
+
+> **Nota:** La IP es efímera — cambia cada vez que el task se reinicia. Para obtener la URL actual: ECS → Clusters → Tasks → task RUNNING → Public IP.
+
+```
+http://<public-ip>:8080/api/v1/solicitudes
+http://<public-ip>:8080/actuator/health
+```
+
+### Activar / desactivar el servicio
+
+Para evitar costos innecesarios el servicio se apaga cuando no está en uso.
+
+**Apagar:**
+1. ECS → Clusters → tu cluster → Services → tu service
+2. **Update service** → Desired tasks: **0** → Update
+
+**Encender:**
+1. ECS → Clusters → tu cluster → Services → tu service
+2. **Update service** → Desired tasks: **1** → Update
+3. Esperar ~1 minuto → copiar la nueva Public IP del task RUNNING
+
+### Flujo de deploy
+
+```bash
+# 1. Build para AMD64 (requerido para Fargate)
+docker buildx build --platform linux/amd64 -t solicitudes-backend .
+
+# 2. Tag
+docker tag solicitudes-backend:latest \
+  <account-id>.dkr.ecr.us-east-2.amazonaws.com/solicitudes-backend:latest
+
+# 3. Login ECR
+aws ecr get-login-password --region us-east-2 | docker login --username AWS \
+  --password-stdin <account-id>.dkr.ecr.us-east-2.amazonaws.com
+
+# 4. Push
+docker push <account-id>.dkr.ecr.us-east-2.amazonaws.com/solicitudes-backend:latest
+```
+
+Luego en ECS → Service → **Update service** → **Force new deployment**.
+
+---
+
+## 15. Troubleshooting
 
 ### Java no encontrado
 ```bash
