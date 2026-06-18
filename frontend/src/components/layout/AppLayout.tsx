@@ -7,7 +7,6 @@ import { Toast } from '../ui/Toast';
 import { useUIStore } from '@/store';
 
 type Page = 'dashboard' | 'bandeja' | 'crear' | 'detalle';
-type ApiStatus = 'ok' | 'error';
 
 const PAGE_META: Record<Page, { title: string; crumb: string }> = {
   dashboard: { title: 'Resumen',                crumb: 'Panel' },
@@ -38,7 +37,6 @@ export function AppLayout({
   orgName = 'Operaciones internas',
 }: AppLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [apiStatus, setApiStatus] = useState<ApiStatus>('ok');
   const { notification, hideNotification } = useUIStore();
 
   const meta = PAGE_META[currentPage];
@@ -50,8 +48,6 @@ export function AppLayout({
         onClose={() => setSidebarOpen(false)}
         currentPage={currentPage}
         totalRequests={totalRequests}
-        apiStatus={apiStatus}
-        onApiStatusChange={setApiStatus}
         onNavigate={onNavigate}
         orgName={orgName}
       />

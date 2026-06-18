@@ -3,15 +3,12 @@
 import { ACCENT } from '@/lib/designTokens';
 
 type Page = 'dashboard' | 'bandeja' | 'crear' | 'detalle';
-type ApiStatus = 'ok' | 'error';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   currentPage: Page;
   totalRequests: number;
-  apiStatus: ApiStatus;
-  onApiStatusChange: (status: ApiStatus) => void;
   onNavigate: (page: Page) => void;
   orgName?: string;
 }
@@ -53,8 +50,6 @@ export function Sidebar({
   onClose,
   currentPage,
   totalRequests,
-  apiStatus,
-  onApiStatusChange,
   onNavigate,
   orgName = 'Organización',
 }: SidebarProps) {
